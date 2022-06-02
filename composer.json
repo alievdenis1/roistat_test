@@ -1,0 +1,19 @@
+{
+    "name": "alievdenis1/acccess-log_parser",
+    "description": "generates information from access_log",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "denis",
+            "email": "denisaliev7@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "ALParser\\": "src/"
+        }
+    }
+}
