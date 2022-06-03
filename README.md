@@ -11,3 +11,10 @@ Usage
 `
 php main.php ./files/example_access_log
 `
+
+requirements
+-
+`
+php >= 8.0
+`
+
