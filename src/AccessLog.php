@@ -7,7 +7,7 @@ class AccessLog
     private int $bytes;
     private int $code;
     private string $url;
-    private string $crawler;
+    private ?string $crawler;
 
     public function setBytes(int $bytes): void
     {
@@ -24,7 +24,7 @@ class AccessLog
         $this->url = $url;
     }
 
-    public function setCrawler(string $crawler): void
+    public function setCrawler(?string $crawler): void
     {
         $this->crawler = $crawler;
     }
@@ -44,7 +44,7 @@ class AccessLog
         return $this->url;
     }
 
-    public function crawler(): string
+    public function crawler(): ?string
     {
         return $this->crawler;
     }

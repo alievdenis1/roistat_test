@@ -29,8 +29,12 @@ class AccessLogReport
                 $this->increaseQuantityViews();
                 $this->increaseQuantityBytes($accessLog->bytes());
                 $this->addUrl($accessLog->url());
-                $this->addCrawler($accessLog->crawler());
                 $this->addStatusCode($accessLog->code());
+
+                $crawler = $accessLog->crawler();
+                if (isset($crawler)) {
+                    $this->addCrawler($accessLog->crawler());
+                }
             }
         } catch (Exceptions\File\FileErrorException $e) {
             $debugger = new Debugger($e);
@@ -80,6 +84,14 @@ class AccessLogReport
 
     public function print(): void
     {
-        /*Код формирования отчета*/
+        $reportData = [
+            'views' => $this->quantityViews,
+            'urls' => $this->quantityUrls(),
+            'traffic' => $this->quantityBytes,
+            'crawlers' => $this->crawlers,
+            'statusCodes' => $this->statusCodes
+        ];
+
+       echo json_encode($reportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
     }
 }

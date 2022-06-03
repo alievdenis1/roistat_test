@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+        "jaybizzle/crawler-detect": "^1.2"
+    },
     "autoload": {
         "psr-4": {
             "ALParser\\": "src/"

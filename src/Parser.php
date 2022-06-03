@@ -3,6 +3,7 @@ namespace ALParser;
 use ALParser\Exceptions\Parser\IncorrectStringException;
 use ALParser\Exceptions\File\FileErrorException;
 use ALParser\AccessLog;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 class Parser
 {
@@ -13,7 +14,8 @@ class Parser
 
     public function __construct(
         private readonly string $filePath,
-        private readonly AccessLog $accessLog
+        private readonly AccessLog $accessLog,
+        private readonly CrawlerDetect $crawlerDetect
     ) {}
 
     /**
@@ -65,19 +67,20 @@ class Parser
     /**
      * @throws Exceptions\Parser\IncorrectStringException
      */
-    private function setDataAccessLog($string): void
+    private function setDataAccessLog(string $lineAccessLog): void
     {
-        preg_match(self::PATTERN, $string, $result);
+        preg_match(self::PATTERN, $lineAccessLog, $dataAccessLog);
 
-        if ($result == []) {
-            throw new Exceptions\Parser\IncorrectStringException($this->filePath, $this->lineNumber, $string);
+        if ($dataAccessLog == []) {
+            throw new Exceptions\Parser\IncorrectStringException($this->filePath, $this->lineNumber, $lineAccessLog);
         };
 
-        $this->accessLog->setBytes((int) $result['bytes']);
-        $this->accessLog->setCode((int) $result['code']);
-        $this->accessLog->setUrl($result['url']);
+        $this->accessLog->setBytes((int) $dataAccessLog['bytes']);
+        $this->accessLog->setCode((int) $dataAccessLog['code']);
+        $this->accessLog->setUrl($dataAccessLog['url']);
 
-        $crawler = $result['userAgent'];
+        $isCrawler = $this->crawlerDetect->isCrawler($dataAccessLog['userAgent']);
+        $crawler = $isCrawler ? $this->crawlerDetect->getMatches() : NULL;
         $this->accessLog->setCrawler($crawler);
     }
 }
