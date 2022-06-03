@@ -55,6 +55,7 @@ class Parser
         }
 
         while (!feof($handle)) {
+            $this->lineNumber++;
             yield trim(fgets($handle));
         }
 
@@ -69,7 +70,7 @@ class Parser
         preg_match(self::PATTERN, $string, $result);
 
         if ($result == []) {
-            throw new Exceptions\Parser\IncorrectStringException($string);
+            throw new Exceptions\Parser\IncorrectStringException($this->filePath, $this->lineNumber, $string);
         };
 
         $this->accessLog->setBytes((int) $result['bytes']);
