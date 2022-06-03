@@ -2,7 +2,7 @@ Install
 -
 ````
 git clone git@github.com:alievdenis1/roistat_test.git
-cd roistat_test.git
+cd roistat_test
 composer install
 ````
 
