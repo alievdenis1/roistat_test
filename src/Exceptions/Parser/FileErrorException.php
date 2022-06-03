@@ -1,5 +1,5 @@
 <?php
-namespace ALParser\Exceptions\File;
+namespace ALParser\Exceptions\Parser;
 use Exception;
 
 class FileErrorException extends Exception implements \ALParser\Exceptions\HumanReadableInterface

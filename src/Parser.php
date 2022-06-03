@@ -1,7 +1,7 @@
 <?php
 namespace ALParser;
 use ALParser\Exceptions\Parser\IncorrectStringException;
-use ALParser\Exceptions\File\FileErrorException;
+use ALParser\Exceptions\Parser\FileErrorException;
 use ALParser\AccessLog;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
@@ -15,7 +15,8 @@ class Parser
     public function __construct(
         private readonly string $filePath,
         private readonly AccessLog $accessLog,
-        private readonly CrawlerDetect $crawlerDetect
+        private readonly CrawlerDetect $crawlerDetect,
+        private readonly Debugger $debugger
     ) {}
 
     /**
@@ -31,29 +32,27 @@ class Parser
                     $this->setDataAccessLog($string);
                     yield $this->accessLog;
                 } catch (Exceptions\Parser\IncorrectStringException $e) {
-                    $debugger = new Debugger($e);
-                    $debugger->handleException();
+                    $this->debugger->handleException($e);
                 }
             }
-        } catch (Exceptions\File\FileErrorException $e) {
-            $debugger = new Debugger($e);
-            $debugger->handleException();
+        } catch (Exceptions\Parser\FileErrorException $e) {
+            $this->debugger->handleException($e);
         }
     }
 
     /**
      * @return \Generator|string
-     * @throws Exceptions\File\FileErrorException
+     * @throws Exceptions\Parser\FileErrorException
      */
     private function readStringFromFile(): \Generator|string
     {
         if (!file_exists($this->filePath)) {
-            throw new Exceptions\File\FileErrorException('Файл не найден');
+            throw new Exceptions\Parser\FileErrorException('Файл не найден');
         }
 
         $handle = fopen($this->filePath, 'r');
         if (!$handle) {
-            throw new Exceptions\File\FileErrorException('Не удалось открыть файл');
+            throw new Exceptions\Parser\FileErrorException('Не удалось открыть файл');
         }
 
         while (!feof($handle)) {

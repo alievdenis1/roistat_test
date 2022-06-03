@@ -6,16 +6,12 @@ class Debugger
 {
     private const PATH = 'debug/log';
 
-    public function __construct(
-        private \Throwable $exception
-    ) {}
-
-    public function handleException(): void
+    public function handleException(\Throwable $exception): void
     {
-        if ($this->exception instanceof Exceptions\HumanReadableInterface) {
-            $this->print($this->exception->getUserMessage());
+        if ($exception instanceof Exceptions\HumanReadableInterface) {
+            $this->print($exception->getUserMessage());
         } else {
-            $this->writeToFile($this->exception->getMessage());
+            $this->writeToFile($exception->getMessage());
         }
     }
 
